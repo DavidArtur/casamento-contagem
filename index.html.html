@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contagem Regressiva</title>
+    <!-- Carrega o Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carrega a fonte Inter --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Define a fonte Inter como padrão */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Adiciona uma sombra ao texto para melhor legibilidade contra o fundo */
+        .text-shadow {
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-cover bg-center bg-no-repeat bg-gray-700">
+
+    <!-- Container principal que centraliza tudo e aplica um leve escurecimento sobre a imagem de fundo --><div class="min-h-screen w-full flex flex-col items-center justify-center bg-black/30 p-4 text-center">
+
+        <!-- A caixa branca foi removida. O conteúdo agora está direto no container principal -->
+        
+            
+            <!-- Título do Evento (agora com texto branco e sombra) --><h1 id="title" class="text-3xl md:text-5xl font-bold text-white text-shadow mb-4">
+                CARREGANDO TÍTULO...
+            </h1>
+            
+            <!-- Texto "FALTAM" (agora com texto branco e sombra) --><p id="faltam-text" class="mb-6 text-xl font-semibold text-white text-shadow">Faltam exatamente:</p>
+            
+            <!-- Container da Contagem Regressiva (agora com texto branco e sombra) --><div id="timer-container" class="flex flex-wrap justify-center gap-4 text-white text-shadow">
+                
+                <!-- Dias --><div class="px-2">
+                    <span id="days" class="text-4xl md:text-6xl font-bold tracking-tighter">00</span>
+                    <span class="block text-sm font-medium">DIAS</span>
+                </div>
+                
+                <!-- Horas --><div class="px-2">
+                    <span id="hours" class="text-4xl md:text-6xl font-bold tracking-tighter">00</span>
+                    <span class="block text-sm font-medium">HORAS</span>
+                </div>
+                
+                <!-- Minutos --><div class="px-2">
+                    <span id="minutes" class="text-4xl md:text-6xl font-bold tracking-tighter">00</span>
+                    <span class="block text-sm font-medium">MINUTOS</span>
+                </div>
+                
+                <!-- Segundos --><div class="px-2">
+                    <span id="seconds" class="text-4xl md:text-6xl font-bold tracking-tighter">00</span>
+                    <span class="block text-sm font-medium">SEGUNDOS</span>
+                </div>
+            </div>
+
+        
+    </div>
+
+    <script>
+        // --- INÍCIO DA CONFIGURAÇÃO ---
+        // Altere os valores abaixo para personalizar sua contagem
+
+        const config = {
+            // Coloque o título do seu evento aqui
+            title: "Trip | Casamento do JOJAO", 
+            
+            // Coloque a data final aqui
+            // Formato: 'YYYY-MM-DDTHH:mm:ss' (Ano-Mês-DiaTTempo)
+            // Exemplo: '2025-01-01T00:00:00' (Meia-noite de 1º de Jan de 2025)
+            targetDate: '2025-12-04T00:00:00',
+
+            // URL da imagem de fundo
+            // Você pode usar um link do Imgur, Postimages ou qualquer URL de imagem direta
+            backgroundImageUrl: 'https://i.ibb.co/3yk94WFw/Picture2gdsgsd.png',
+
+            // Mensagem para quando a contagem terminar
+            countdownCompleteMessage: "A VAGABUNDAGE COMEÇOU!"
+        };
+        // --- FIM DA CONFIGURAÇÃO ---
+
+
+        // Seleciona os elementos da página
+        const titleEl = document.getElementById('title');
+        const faltamTextEl = document.getElementById('faltam-text');
+        const timerContainerEl = document.getElementById('timer-container');
+        
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+
+        // Aplica as configurações do usuário
+        titleEl.textContent = config.title;
+        // Aplica a imagem de fundo (sem opacidade)
+        document.body.style.backgroundImage = `url('${config.backgroundImageUrl}')`;
+        
+        // Converte a data-alvo para milissegundos
+        const targetTime = new Date(config.targetDate).getTime();
+
+        // Função para formatar o tempo (adiciona um 0 à esquerda se for < 10)
+        function formatTime(time) {
+            return time < 10 ? `0${time}` : time;
+        }
+
+        // Função principal da contagem
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetTime - now;
+
+            // Se o tempo acabou
+            if (distance < 0) {
+                clearInterval(interval); // Para o relógio
+                faltamTextEl.style.display = 'none'; // Esconde o "FALTAM"
+                
+                // Mostra a mensagem final com o estilo correto (texto branco e sombra)
+                timerContainerEl.innerHTML = `
+                    <div class="text-3xl md:text-4xl font-bold text-white text-shadow p-4">
+                        ${config.countdownCompleteMessage}
+                    </div>
+                `;
+                // Garante que a mensagem final fique centralizada
+                timerContainerEl.className = "flex justify-center";
+                return;
+            }
+
+            // Cálculos de tempo
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Atualiza o HTML com os novos valores
+            daysEl.textContent = formatTime(days);
+            hoursEl.textContent = formatTime(hours);
+            minutesEl.textContent = formatTime(minutes);
+            secondsEl.textContent = formatTime(seconds);
+        }
+
+        // Inicia a contagem
+        updateCountdown(); // Chama uma vez imediatamente para não mostrar 00:00:00:00
+        const interval = setInterval(updateCountdown, 1000); // Atualiza a cada segundo
+    </script>
+
+</body>
+</html>
