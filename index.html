@@ -19,6 +19,19 @@
 </head>
 <body class="bg-cover bg-center bg-no-repeat bg-gray-700">
 
+    <!-- Elemento de Áudio para a música de fundo -->
+    <!-- Começa mudo (muted) e repete (loop) -->
+    <audio id="background-music" loop muted autoplay>
+        <!-- A URL da música é definida no JavaScript -->
+        <source src="" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
+    <!-- Botão para Ativar/Desativar o Som -->
+    <button id="mute-button" class="fixed bottom-4 right-4 z-50 bg-white/50 backdrop-blur-md text-black px-4 py-2 rounded-full shadow-lg text-sm font-semibold transition-all hover:bg-white/70">
+        Ativar Som
+    </button>
+
     <!-- Container principal que centraliza tudo e aplica um leve escurecimento sobre a imagem de fundo --><div class="min-h-screen w-full flex flex-col items-center justify-center bg-black/30 p-4 text-center">
 
         <!-- A caixa branca foi removida. O conteúdo agora está direto no container principal -->
@@ -71,12 +84,39 @@
 
             // URL da imagem de fundo
             // Você pode usar um link do Imgur, Postimages ou qualquer URL de imagem direta
-            backgroundImageUrl: 'https://i.ibb.co/xtpf4vGP/Picture2gdsgsd.png',
+            backgroundImageUrl: 'https://i.ibb.co/3yk94WFw/Picture2gdsgsd.png',
 
             // Mensagem para quando a contagem terminar
             countdownCompleteMessage: "A VAGABUNDAGE COMEÇOU!"
         };
         // --- FIM DA CONFIGURAÇÃO ---
+
+
+        // --- CÓDIGO DA MÚSICA ---
+        // Link da sua música. Troque este link por um link DIRETO de um .mp3
+        // Eu usei uma música ambiente gratuita como exemplo.
+        const musicUrl = 'https://davidartur.github.io/casamento-contagem/musica.mpeg';
+
+        const music = document.getElementById('background-music');
+        const muteButton = document.getElementById('mute-button');
+        
+        // Define a URL da música no elemento de áudio
+        music.src = musicUrl;
+
+        // Tenta tocar a música (começa mudo)
+        music.play().catch(e => console.warn("O navegador bloqueou o autoplay inicial, esperando interação do usuário."));
+
+        // Controla o clique no botão de som
+        muteButton.addEventListener('click', () => {
+            if (music.muted) {
+                music.muted = false;
+                muteButton.textContent = 'Desativar Som';
+            } else {
+                music.muted = true;
+                muteButton.textContent = 'Ativar Som';
+            }
+        });
+        // --- FIM DO CÓDIGO DA MÚSICA ---
 
 
         // Seleciona os elementos da página
@@ -143,4 +183,5 @@
 
 </body>
 </html>
+
 
